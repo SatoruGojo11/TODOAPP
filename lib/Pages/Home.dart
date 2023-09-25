@@ -102,11 +102,9 @@ class _HomepageState extends State<Homepage> {
   //delete func for deleting the task
 
   void deletefunc(int value) {
-    setState(
-      () {
-        todotask.removeAt(value);
-      },
-    );
+    setState(() {
+      todotask.removeAt(value);
+    });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: Colors.red,
