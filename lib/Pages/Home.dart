@@ -26,7 +26,7 @@ class _HomepageState extends State<Homepage> {
 
   // new task controller
 
-  // TextEditingController newtaskcontroller = TextEditingController();
+  TextEditingController newtaskcontroller = TextEditingController();
 
   // create new task while clicking on Floating action button
   Future createnewtask() {
