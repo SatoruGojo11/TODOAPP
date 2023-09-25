@@ -36,7 +36,9 @@ class _HomepageState extends State<Homepage> {
             children: [
               // for taking user input
               TextField(
-                // decoration: OutlineInputBorder(borderRadius: BorderRadius.circular(18),),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder()
+                ),
               ),
               // buttons
               Row(
