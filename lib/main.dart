@@ -10,7 +10,7 @@ void main(List<String> args) {
       debugShowCheckedModeBanner: false,
       home: Homepage(),
       theme: ThemeData(
-        primarySwatch: Colors.yellow,
+        primarySwatch: Colors.amber,
       ),
     ),
   );

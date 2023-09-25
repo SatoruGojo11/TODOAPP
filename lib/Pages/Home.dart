@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -23,8 +24,11 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  // create new task while clicking on Floating action button
+  // new task controller
 
+  TextEditingController newtaskcontroller = TextEditingController();
+
+  // create new task while clicking on Floating action button
   Future createnewtask() {
     return showDialog(
       context: context,
@@ -33,18 +37,40 @@ class _HomepageState extends State<Homepage> {
         content: Container(
           height: 150,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               // for taking user input
               TextField(
+                strutStyle: StrutStyle(height: 1.3),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+                controller: newtaskcontroller,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder()
+                  fillColor: Colors.black,
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.black,
+                      width: 50,
+                    ),
+                  ),
+                  hintText: "Add a new task",
                 ),
               ),
               // buttons
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  // save button
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        todotask.add([newtaskcontroller.text, false]);
+                        newtaskcontroller.clear();
+                      });
+                      Navigator.of(context).pop();
+                    },
                     child: Text(
                       'Save',
                       style: TextStyle(
@@ -53,8 +79,9 @@ class _HomepageState extends State<Homepage> {
                       ),
                     ),
                   ),
+                  // cancel button
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () => Navigator.of(context).pop(),
                     child: Text(
                       'Cancel',
                       style: TextStyle(
@@ -72,6 +99,25 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
+  //delete func for deleting the task
+
+  void deletefunc(int value) {
+    setState(
+      () {
+        todotask.removeAt(value);
+      },
+    );
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(
+          "${todotask[value][0]} deleted!!",
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +126,7 @@ class _HomepageState extends State<Homepage> {
         title: Text(
           'TO DO APP',
           style: TextStyle(
-            color: Colors.blue,
+            color: Colors.black,
             fontSize: 25,
           ),
         ),
@@ -101,32 +147,45 @@ class _HomepageState extends State<Homepage> {
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.amber,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
+            child: Slidable(
+              endActionPane: ActionPane(
+                motion: StretchMotion(),
                 children: [
-                  // Check Box
-                  Checkbox(
-                    value: todotask[index][1],
-                    onChanged: (value) => checkboxtap(value, index),
-                    activeColor: Colors.black,
+                  SlidableAction(
+                    onPressed: (context) => deletefunc(index),
+                    icon: Icons.delete,
+                    backgroundColor: Colors.red.shade300,
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  // Task Name
-                  Text(
-                    todotask[index][0],
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      decoration: todotask[index][1] == true
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
-                    ),
-                  )
                 ],
+              ),
+              child: Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.green[500],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    // Check Box
+                    Checkbox(
+                      value: todotask[index][1],
+                      onChanged: (value) => checkboxtap(value, index),
+                      activeColor: Colors.black87,
+                    ),
+                    // Task Name
+                    Text(
+                      todotask[index][0],
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        decoration: todotask[index][1] == true
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           );
