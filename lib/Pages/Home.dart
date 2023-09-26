@@ -13,20 +13,22 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  // Take reference of the hive box
 
-  final mybox = Hive.box('taskBox');
+  // Take reference of the hive box
+  final mybox = Hive.box("taskBox");
   TodoDatabase db = TodoDatabase();
 
   @override
   void initState() {
     super.initState();
+
     // first time opening the app
     if (mybox.get('TODOLIST') == null) {
       db.createdataList();
     } else {
       db.loadData();
     }
+
   }
 
   //what's gonna happen when Check box Tapped
@@ -38,17 +40,18 @@ class _HomepageState extends State<Homepage> {
   }
 
   // new task controller
-
   TextEditingController newtaskcontroller = TextEditingController();
 
   // create new task while clicking on Floating action button
   Future createnewtask() {
     return showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.yellow[500],
         content: Container(
           height: 150,
+          width: 300,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -79,11 +82,13 @@ class _HomepageState extends State<Homepage> {
                   TextButton(
                     onPressed: () {
                       setState(() {
-                        db.todoList.add([newtaskcontroller.text, false]);
-                        newtaskcontroller.clear();
+                        if(newtaskcontroller.text.isNotEmpty){
+                          db.todoList.add([newtaskcontroller.text, false]);
+                          newtaskcontroller.clear();
+                          Navigator.of(context).pop();
+                        }
                       });
                       db.updateData();
-                      Navigator.of(context).pop();                      
                     },
                     child: Text(
                       'Save',
@@ -114,21 +119,20 @@ class _HomepageState extends State<Homepage> {
   }
 
   //delete func for deleting the task
-
   void deletefunc(int value) {
     setState(() {
       db.todoList.removeAt(value);
     });
     db.updateData();
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   SnackBar(
-    //     backgroundColor: Colors.red,
-    //     content: Text(
-    //       "${db.todoList[value][0]} deleted!!",
-    //       style: TextStyle(color: Colors.black),
-    //     ),
-    //   ),
-    // );
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(
+          "${db.todoList[value][0]} deleted!!",
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+    );
   }
 
   @override
@@ -196,7 +200,7 @@ class _HomepageState extends State<Homepage> {
                             ? TextDecoration.lineThrough
                             : TextDecoration.none,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
