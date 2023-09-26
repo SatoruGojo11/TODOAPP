@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:todoapp/Data/database.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -11,17 +13,28 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  // List of TODO Task
-  List todotask = [
-    ["1st Task", false],
-    ["2nd Task", false],
-  ];
+  // Take reference of the hive box
+
+  final mybox = Hive.box('taskBox');
+  TodoDatabase db = TodoDatabase();
+
+  @override
+  void initState() {
+    super.initState();
+    // first time opening the app
+    if (mybox.get('TODOLIST') == null) {
+      db.createdataList();
+    } else {
+      db.loadData();
+    }
+  }
 
   //what's gonna happen when Check box Tapped
   void checkboxtap(bool? value, int index) {
     setState(() {
-      todotask[index][1] = !todotask[index][1];
+      db.todoList[index][1] = !db.todoList[index][1];
     });
+    db.updateData();
   }
 
   // new task controller
@@ -66,10 +79,11 @@ class _HomepageState extends State<Homepage> {
                   TextButton(
                     onPressed: () {
                       setState(() {
-                        todotask.add([newtaskcontroller.text, false]);
+                        db.todoList.add([newtaskcontroller.text, false]);
                         newtaskcontroller.clear();
                       });
-                      Navigator.of(context).pop();
+                      db.updateData();
+                      Navigator.of(context).pop();                      
                     },
                     child: Text(
                       'Save',
@@ -103,17 +117,18 @@ class _HomepageState extends State<Homepage> {
 
   void deletefunc(int value) {
     setState(() {
-      todotask.removeAt(value);
+      db.todoList.removeAt(value);
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.red,
-        content: Text(
-          "${todotask[value][0]} deleted!!",
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
-    );
+    db.updateData();
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   SnackBar(
+    //     backgroundColor: Colors.red,
+    //     content: Text(
+    //       "${db.todoList[value][0]} deleted!!",
+    //       style: TextStyle(color: Colors.black),
+    //     ),
+    //   ),
+    // );
   }
 
   @override
@@ -141,7 +156,7 @@ class _HomepageState extends State<Homepage> {
         ),
       ),
       body: ListView.builder(
-        itemCount: todotask.length,
+        itemCount: db.todoList.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.all(10.0),
@@ -167,17 +182,17 @@ class _HomepageState extends State<Homepage> {
                   children: [
                     // Check Box
                     Checkbox(
-                      value: todotask[index][1],
+                      value: db.todoList[index][1],
                       onChanged: (value) => checkboxtap(value, index),
                       activeColor: Colors.black87,
                     ),
                     // Task Name
                     Text(
-                      todotask[index][0],
+                      db.todoList[index][0],
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 20,
-                        decoration: todotask[index][1] == true
+                        decoration: db.todoList[index][1] == true
                             ? TextDecoration.lineThrough
                             : TextDecoration.none,
                       ),
