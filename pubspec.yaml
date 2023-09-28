@@ -38,11 +38,12 @@ dependencies:
   flutter_slidable:
   hive:
   hive_flutter:
+  provider:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  hive_generator:  
+  hive_generator:
   build_runner:
 
   # The "flutter_lints" package below contains a set of recommended lints to
