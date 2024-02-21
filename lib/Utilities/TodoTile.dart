@@ -1,21 +1,23 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:todoapp/Data/database.dart';
 
 class TODoTile extends StatelessWidget {
-  final String Taskname;
-  final bool TaskCompleted;
+  final String taskName;
+  final bool taskCompleted;
   final int tileindex;
-  final Function(bool?)? Onchangedatcreatetask;
-  final dynamic Onchangedatcheckboxtap;
+  final Function(bool?)? onChangedAtCreateTask;
+  final dynamic onChangedAtCheckBoxTap;
 
   TODoTile({
     super.key,
-    required this.Taskname,
-    required this.TaskCompleted,
+    required this.taskName,
+    required this.taskCompleted,
     required this.tileindex,
-    required this.Onchangedatcreatetask,
-    required this.Onchangedatcheckboxtap,
+    required this.onChangedAtCreateTask,
+    required this.onChangedAtCheckBoxTap,
   });
 
   final db = TodoDatabase();
@@ -27,11 +29,11 @@ class TODoTile extends StatelessWidget {
       padding: const EdgeInsets.all(10.0),
       child: Slidable(
         endActionPane: ActionPane(
-          motion: StretchMotion(),
+          motion: const StretchMotion(),
           children: [
             SlidableAction(
               onPressed: (context) {
-                print('Todo Tile');
+                log('Todo Tile');
                 db.deleteData(tileindex);
                 db.updateData();
               },
@@ -42,7 +44,7 @@ class TODoTile extends StatelessWidget {
           ],
         ),
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: Colors.green[500],
             borderRadius: BorderRadius.circular(20),
@@ -52,7 +54,7 @@ class TODoTile extends StatelessWidget {
               // Check Box
               Checkbox(
                 value: db.todoList[tileindex][1],
-                onChanged: Onchangedatcheckboxtap,
+                onChanged: onChangedAtCheckBoxTap,
                 activeColor: Colors.black87,
               ),
               // Task Name

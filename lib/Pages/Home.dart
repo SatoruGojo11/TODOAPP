@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +17,6 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-
   // Take reference of the hive box
   final mybox = Hive.box("taskBox");
   TodoDatabase db = TodoDatabase();
@@ -25,10 +26,10 @@ class _HomepageState extends State<Homepage> {
     super.initState();
     // first time opening the app
     if (mybox.get('TODOLIST') == null) {
-      print('Home File');
+      log('Home File');
       db.createdataList();
     } else {
-      print('Home File');
+      log('Home File');
       db.loadData();
     }
   }
@@ -54,7 +55,9 @@ class _HomepageState extends State<Homepage> {
         floatingActionButton: Padding(
           padding: const EdgeInsets.all(20.0),
           child: FloatingActionButton(
-            onPressed: logicfunc.createnewtask(context, newtaskcontroller),
+            onPressed: () {
+              logicfunc.createnewtask(context, newtaskcontroller);
+            },
             child: Icon(
               Icons.add,
               color: Colors.black,
@@ -64,16 +67,17 @@ class _HomepageState extends State<Homepage> {
         body: ListView.builder(
           itemCount: db.todoList.length,
           itemBuilder: (context, index) {
-            print('Home File 2');
+            log('Home File 2');
             return TODoTile(
-              Taskname: db.todoList[index][0],
-              TaskCompleted: db.todoList[index][1],
+              taskName: db.todoList[index][0],
+              taskCompleted: db.todoList[index][1],
               tileindex: index,
-              Onchangedatcreatetask: (value) => logicfunc.createnewtask(
+              onChangedAtCreateTask: (value) => logicfunc.createnewtask(
                 context,
                 newtaskcontroller,
               ),
-              Onchangedatcheckboxtap: (value) => logicfunc.checkboxtap(value, index),
+              onChangedAtCheckBoxTap: (value) =>
+                  logicfunc.checkboxtap(value, index),
             );
           },
         ),

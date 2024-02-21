@@ -1,15 +1,20 @@
+import 'dart:developer';
+
 import 'package:hive_flutter/hive_flutter.dart';
 
 class TodoDatabase {
 
-  List todoList = [];
+  List todoList = [
+    ['1st Task', false],
+    ['2nd Task', false],
+  ];
 
   // reference of our box
   final mybox = Hive.box("taskBox");
 
   // first time user open the App
   void createdataList() {
-    print('Database File');
+    log('Database File');
     todoList = [
       ['1st Task', false],
       ['2nd Task', false],
@@ -18,7 +23,7 @@ class TodoDatabase {
 
   // load the data from database
   void loadData() {
-    print('Database File');
+    log('Database File');
     todoList = mybox.get('TODOLIST');
   }
 

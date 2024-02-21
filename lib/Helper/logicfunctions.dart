@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:todoapp/Data/database.dart';
 
@@ -7,13 +9,13 @@ class Logicfuncs extends ChangeNotifier {
 
   // create new task while clicking on Floating action button
   createnewtask(ctx, taskctrl) {
-    print('Logic Funcs');
+    log('Logic Funcs');
     return showDialog(
       barrierDismissible: false,
       context: ctx,
-      builder: (context) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         backgroundColor: Colors.yellow[500],
-        content: Container(
+        content: SizedBox(
           height: 150,
           width: 300,
           child: Column(
@@ -21,13 +23,13 @@ class Logicfuncs extends ChangeNotifier {
             children: [
               // for taking user input
               TextField(
-                strutStyle: StrutStyle(height: 1.3),
-                style: TextStyle(
+                strutStyle: const StrutStyle(height: 1.3),
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 20,
                 ),
                 controller: taskctrl,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   fillColor: Colors.black,
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -48,12 +50,12 @@ class Logicfuncs extends ChangeNotifier {
                       if (taskctrl.text.isNotEmpty) {
                         db.todoList.add([taskctrl.text, false]);
                         taskctrl.clear();
-                        Navigator.pop(context);
+                        Navigator.pop(ctx);
                       }
-                      Future.delayed(Duration(seconds: 2), () => notifyListeners());
+                      Future.delayed(const Duration(seconds: 2), () => notifyListeners());
                       db.updateData();
                     },
-                    child: Text(
+                    child: const Text(
                       'Save',
                       style: TextStyle(
                         fontSize: 20,
@@ -63,8 +65,8 @@ class Logicfuncs extends ChangeNotifier {
                   ),
                   // cancel button
                   TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(
+                    onPressed: () => Navigator.pop(ctx),
+                    child: const Text(
                       'Cancel',
                       style: TextStyle(
                         fontSize: 20,
@@ -85,6 +87,6 @@ class Logicfuncs extends ChangeNotifier {
   checkboxtap(bool? value, int index) {
     db.todoList[index][1] = !db.todoList[index][1];
     db.updateData();
-    Future.delayed(Duration(seconds: 2), () => notifyListeners());
+    Future.delayed(const Duration(seconds: 2), () => notifyListeners());
   }
 }

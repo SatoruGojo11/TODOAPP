@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -12,8 +14,9 @@ void main(List<String> args) async {
   await Hive.initFlutter();
 
   // Create A Hive box
+  // ignore: unused_local_variable
   var mybox = await Hive.openBox("taskBox");
-  print('Main File');
+  log('Main File');
 
   runApp(
     MultiProvider(
